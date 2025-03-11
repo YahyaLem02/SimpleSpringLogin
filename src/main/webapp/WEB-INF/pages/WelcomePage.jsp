@@ -40,36 +40,38 @@
             background-color: #f49e38;
             color: white;
         }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
         .table-container {
             overflow-x: auto;
         }
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #273136;
+        .logout-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f49e38;
+            color: white;
             text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
         }
-        a:hover {
-            text-decoration: underline;
+        .logout-btn:hover {
+            background-color: #e48928;
         }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <!-- Message de bienvenue -->
     <h2>Bienvenue</h2>
     <p class="welcome-message">Bonjour, ${username}! Bienvenue sur votre espace.</p>
 
-    <!-- Table des utilisateurs -->
     <div class="table-container">
         <table>
             <thead>
             <tr>
-                <th>Nom</th>
+                <th>Nom d'utilisateur</th>
                 <th>Email</th>
-                <th>Mot de Passe</th>
+                <th>Mot de passe</th>
             </tr>
             </thead>
             <tbody>
@@ -77,16 +79,16 @@
                 <tr>
                     <td>${user.username}</td>
                     <td>${user.email}</td>
-                    <td>${user.password}</td>
+                    <td>${user.displayPassword}</td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
     </div>
 
-    <!-- Lien de déconnexion -->
-    <a href="/logout">Se déconnecter</a>
+    <div style="text-align: center;">
+        <a href="/logout" class="logout-btn">Se déconnecter</a>
+    </div>
 </div>
-
 </body>
 </html>
