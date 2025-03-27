@@ -1,26 +1,14 @@
 package org.example.springtp.controllers;
 
-import org.example.springtp.model.Login;
-import org.example.springtp.model.User;
-import org.example.springtp.repositories.LoginRepository;
-import org.example.springtp.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.springtp.models.ManageLogin;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collections;
-
 @Controller
 public class RegisterController {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private LoginRepository loginRepository;
 
     @GetMapping("/")
     public String showRegisterPage() {
@@ -48,21 +36,15 @@ public class RegisterController {
             return model;
         }
 
-        if (loginRepository.findByEmail(email) != null) {
-            model.addObject("error", "Cet email est déjà utilisé.");
+        if (ManageLogin.instance.getUserByEmail(email) != null) {
+            model.addObject("error", "Cette adresse email est déjà utilisée.");
             model.setViewName("inscription");
             return model;
         }
 
-        Login login = new Login(email, password);
-        loginRepository.save(login);
-
-        User user = new User();
-        user.setUsername(username);
-        user.setLogins(Collections.singletonList(login));
-        userRepository.save(user);
-
-        model.setViewName("redirect:/login");
+        ManageLogin.instance.addUser(username, email, password);
+        model.addObject("message", "Inscription réussie ! Vous pouvez maintenant vous connecter.");
+        model.setViewName("loginPage");
         return model;
     }
 }

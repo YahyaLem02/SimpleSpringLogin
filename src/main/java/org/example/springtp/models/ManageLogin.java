@@ -1,9 +1,6 @@
-package org.example.springtp.model;
+package org.example.springtp.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-
+import org.example.springtp.entities.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -13,9 +10,9 @@ public enum ManageLogin {
 
     private HashMap<String, User> users = new HashMap<>();
 
-  //  public void addUser(String username, String email, String password) {
-   //     users.put(email, new User(username, email, password));
-  //  }
+    public void addUser(String username, String email, String password) {
+        users.put(email, new User(username, email, password));
+    }
 
     public HashMap<String, User> getUsers() {
         return users;
@@ -23,8 +20,7 @@ public enum ManageLogin {
 
     public boolean checkCredentials(String email, String password) {
         User user = users.get(email);
-        Login login = new Login(email, password);
-        return login != null && login.getPassword().equals(password);
+        return user != null && user.getPassword().equals(password);
     }
 
     public User getUserByEmail(String email) {
@@ -34,8 +30,4 @@ public enum ManageLogin {
     public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
-
-
-
-
 }

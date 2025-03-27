@@ -1,9 +1,8 @@
 package org.example.springtp.controllers;
 
 import jakarta.servlet.http.HttpSession;
-import org.example.springtp.model.ManageLogin;
-import org.example.springtp.repositories.LoginRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.springtp.entities.User;
+import org.example.springtp.models.ManageLogin;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class LoginController {
-
-    @Autowired
-    private LoginRepository LoginRepository;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -25,20 +21,18 @@ public class LoginController {
     public ModelAndView login(@RequestParam String email, @RequestParam String password, HttpSession session) {
         ModelAndView model = new ModelAndView();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            model.addObject("error", "Tous les champs sont obligatoires.");
+        if (ManageLogin.instance.checkCredentials(email, password)) {
+            User user = ManageLogin.instance.getUserByEmail(email);
+            session.setAttribute("user", user);
+
+            model.addObject("username", user.getUsername());
+            model.addObject("userList", ManageLogin.instance.getAllUsers());
+            model.setViewName("WelcomePage");
+        } else {
+            model.addObject("message", "Email ou mot de passe incorrect.");
             model.setViewName("loginPage");
-            return model;
         }
 
-        if(!LoginRepository.findByEmail(email).getPassword().equals(password)) {
-            model.addObject("error", "Email ou mot de passe incorrect.");
-            model.setViewName("loginPage");
-            return model;
-        }
-
-        session.setAttribute("email", email);
-        model.setViewName("redirect:/");
         return model;
     }
 
